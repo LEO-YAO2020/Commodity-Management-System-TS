@@ -7,12 +7,10 @@ import Admin from './page/admin/admin'
 class App extends Component {
   render() {
     return (
-      <div>
         <Switch>
           <Route path='/login' component={Login} />
           <Route path='/admin' component={Admin} />
         </Switch>
-      </div>
     )
   }
 }
