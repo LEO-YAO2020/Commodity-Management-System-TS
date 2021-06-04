@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import styled from 'styled-components';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '../../redux/reduxHooks';
 import { Test1, Test2, selectValue } from '../../redux/reducers/test_reducer';
-import { reqLogin } from '../../../api'
+import { reqLogin } from '../../api/index';
+import {LoginType} from '../../lib/types/login'
 
 const LoginStyle = styled.div`
   width: 100%;
@@ -49,11 +50,16 @@ const Login = () => {
   const value = useAppSelector(selectValue);
   const dispatch = useAppDispatch();
 
-  const onFinish = (values: any) => {
+  const onFinish = async(values: { username: string; password: string }) => {
     dispatch(Test1({ data: 1 }));
-    const {username,password} = values
-    reqLogin()
-    console.log('Success:', values);
+    //const {username,password} = values
+    let result:LoginType = await reqLogin(values)
+    const {status,msg,data} = result
+    if (status === 0) {
+      console.log(data);
+    }else{
+      message.warning(msg||'')
+    }
   };
 
   return (
@@ -64,7 +70,7 @@ const Login = () => {
       </HeaderStyle>
       <section>
         <h1>用户登录</h1>
-        <Form name="normal_login"  onFinish={onFinish}>
+        <Form name="normal_login" onFinish={onFinish}>
           <Form.Item
             name="username"
             rules={[
@@ -78,9 +84,7 @@ const Login = () => {
               placeholder="Username"
             />
           </Form.Item>
-          <Form.Item
-            name="password"
-          >
+          <Form.Item name="password">
             <Input
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
