@@ -1,8 +1,10 @@
 import { configureStore,ThunkAction,Action } from '@reduxjs/toolkit'
-import testReducer from './reducers/test_reducer'
+import loginReducer from './reducers/login_reducer'
 
-export const store  = configureStore({
-  reducer:testReducer
+export const store  = configureStore({  // = connect()+combineReducers()
+  reducer:{
+    userInfo :loginReducer
+  }
 })
 
 export type AppDispatch = typeof store.dispatch;

@@ -1,19 +1,22 @@
 import { message } from 'antd';
 import axios, { AxiosError } from 'axios';
-import storage from '../lib/types/storage';
+import { baseURL } from '../config';
+import Nprogress from 'nprogress';
+import 'nprogress/nprogress.css';
 const axiosInstance = axios.create({
   withCredentials: true,
-  baseURL: 'http://localhost:3000/',
+  baseURL,
   responseType: 'json',
 });
 
 axiosInstance.interceptors.request.use((config) => {
+  Nprogress.start();
   if (!config.url?.includes('login')) {
     return {
       ...config,
       headers: {
         ...config.headers,
-        Authorization: 'Bearer ' + storage?.token,
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
     };
   }
@@ -21,13 +24,13 @@ axiosInstance.interceptors.request.use((config) => {
 });
 axiosInstance.interceptors.response.use(
   (res) => {
+    Nprogress.done();
     return res.data;
   },
   (error: AxiosError): Promise<AxiosError> => {
     const errorInfo: any = error.response;
-    if (errorInfo.config.url.includes('login')) {
-      message.error(errorInfo.data.data);
-    }
+    Nprogress.done();
+    message.error(error.message);
     if (!errorInfo.data.data) {
       switch (errorInfo.status) {
         case 400:
@@ -91,7 +94,7 @@ async function apiDeleteResponse(url: string, param: {}) {
 }
 
 export const reqLogin = async (query: { username: string; password: string }) => {
-  const res = await apiPostResponse('login', query);
+  const res = await apiPostResponse('/login', query);
   return res;
 };
 

@@ -1,7 +1,20 @@
 export interface LoginInter {
-  status:number
-  msg?:string
-  data:{}
+  status: number;
+  msg?: string;
+  data: {
+    user: {
+      username:string
+    };
+    token: string;
+  };
 }
 
-export type LoginType = LoginInter
+export interface LoginResponse {
+  user: {
+    username: string;
+  };
+  token: string;
+  isLogin: boolean;
+}
+
+export type LoginType = LoginInter;

@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import styled from 'styled-components';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { useAppDispatch, useAppSelector } from '../../redux/reduxHooks';
-import { Test1, Test2, selectValue } from '../../redux/reducers/test_reducer';
+import { useAppDispatch,useAppSelector } from '../../redux/reduxHooks';
+import { saveUserInfo,userInfo } from '../../redux/reducers/login_reducer';
 import { reqLogin } from '../../api/index';
-import {LoginType} from '../../lib/types/login'
-
+import { LoginType } from '../../lib/types/login';
+import { Redirect, RouteComponentProps } from 'react-router';
 const LoginStyle = styled.div`
   width: 100%;
   height: 100%;
@@ -46,22 +46,30 @@ const HeaderStyle = styled.header`
   }
 `;
 
-const Login = () => {
-  const value = useAppSelector(selectValue);
+const Login = (props: RouteComponentProps) => {
   const dispatch = useAppDispatch();
-
-  const onFinish = async(values: { username: string; password: string }) => {
-    dispatch(Test1({ data: 1 }));
+  const {isLogin} = useAppSelector(userInfo)
+  const onFinish = async (values: { username: string; password: string }) => {
+    //dispatch(Test1({ data: 1 }));
     //const {username,password} = values
-    let result:LoginType = await reqLogin(values)
-    const {status,msg,data} = result
+    let result: LoginType = await reqLogin(values);
+    const { status, msg, data } = result;
     if (status === 0) {
+      //store.setUserInfo(data)
       console.log(data);
-    }else{
-      message.warning(msg||'')
+      localStorage.setItem('user',JSON.stringify(data.user))
+      localStorage.setItem('token',data.token)
+      localStorage.setItem('isLogin','true')
+      dispatch(saveUserInfo(data));
+      props.history.replace('/admin');
+    } else {
+      message.warning(msg || '');
     }
   };
-
+  
+  if (isLogin) {
+    return <Redirect to='/admin'/>
+  }
   return (
     <LoginStyle>
       <HeaderStyle>
