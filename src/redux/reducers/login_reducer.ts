@@ -1,21 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { LoginResponse } from '../../lib/types/login';
-
-export type LoginResType = LoginResponse;
+import { LoginResponse, userInter } from '../../lib/types/login';
 
 
-let user = JSON.parse(localStorage.getItem('user') || '{}');
-let token = localStorage.getItem('token');
+let user: userInter = JSON.parse(localStorage.getItem('user') || '{}');
+let token: string = localStorage.getItem('token') || '';
 
-const initialState: LoginResType = {
+const initialState: LoginResponse = {
   user: user || '',
   token: token || '',
   isLogin: user && token ? true : false,
 };
 
 export const testSlice = createSlice({
-  name: 'test',
+  name: 'login',
   initialState,
   reducers: {
     saveUserInfo: (
@@ -29,16 +27,17 @@ export const testSlice = createSlice({
       state.token = action.payload.token;
       state.isLogin = true;
     },
-    deleteUserInfo:(state)=>{
-      state.user.username = ''
-      state.isLogin=false
-      state.token=''
-    }
+    deleteUserInfo: (state) => {
+      state.user.username = '';
+      state.isLogin = false;
+      state.token = '';
+    },
   },
 });
 
-export const { saveUserInfo,deleteUserInfo } = testSlice.actions;
+export const { saveUserInfo, deleteUserInfo } = testSlice.actions; //= connect(dispatch)
 
-export const userInfo = (state: RootState) => state.userInfo; // = connect()
+export const userInfo = (state: RootState) => state.userInfo; // = connect(state)
+
 
 export default testSlice.reducer;

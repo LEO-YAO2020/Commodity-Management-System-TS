@@ -9,10 +9,12 @@ export interface LoginInter {
   };
 }
 
-export interface LoginResponse {
-  user: {
+export interface userInter {
     username: string;
-  };
+}
+
+export interface LoginResponse {
+  user: userInter;
   token: string;
   isLogin: boolean;
 }

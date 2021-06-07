@@ -50,8 +50,7 @@ const Login = (props: RouteComponentProps) => {
   const dispatch = useAppDispatch();
   const {isLogin} = useAppSelector(userInfo)
   const onFinish = async (values: { username: string; password: string }) => {
-    //dispatch(Test1({ data: 1 }));
-    //const {username,password} = values
+
     let result: LoginType = await reqLogin(values);
     const { status, msg, data } = result;
     if (status === 0) {
