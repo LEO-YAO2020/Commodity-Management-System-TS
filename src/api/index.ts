@@ -5,8 +5,8 @@ export const reqLogin = async (query: { username: string; password: string }) =>
   return res;
 };
 
-export const reqCategoryList = async (query:{}) => {
-  const res = await apiGetResponse('/manage/category/list', query);
+export const reqCategoryList = async () => {
+  const res = await apiGetResponse('/manage/category/list');
   return res;
 };
 

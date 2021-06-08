@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { Redirect, Route, Switch } from 'react-router';
+import { Redirect, Route, RouteComponentProps, Switch } from 'react-router';
 import { Layout } from 'antd';
 import styled from 'styled-components';
 import { reqCategoryList } from '../../api';
-import { useAppDispatch, useAppSelector } from '../../redux/reduxHooks';
-import { userInfo, deleteUserInfo } from '../../redux/reducers/login_reducer';
+import {  useAppSelector } from '../../redux/reduxHooks';
+import { userInfo } from '../../redux/reducers/login_reducer';
 import Header from './header/header';
 import Home from '../../components/home/home';
 import Category from '../category/category';
@@ -16,6 +16,7 @@ import Line from '../line/line';
 import Pie from '../pie/pie';
 
 const { Footer, Sider, Content } = Layout;
+
 const LayoutStyle = styled(Layout)`
   height: 100%;
   .sider {
@@ -30,20 +31,18 @@ const LayoutStyle = styled(Layout)`
   }
 `;
 
-function Admin() {
-  const { user, isLogin } = useAppSelector(userInfo);
-  const dispatch = useAppDispatch();
-  const getCategoryList = async () => {
-    return await reqCategoryList({});
-  };
+function Admin(props:RouteComponentProps) {
+  const { isLogin } = useAppSelector(userInfo);
+
   useEffect(() => {
-    getCategoryList();
+    reqCategoryList().then(
+      res=>{
+        console.log(res);
+      }
+    )
+    
   }, []);
 
-  const logout = () => {
-    localStorage.clear();
-    dispatch(deleteUserInfo());
-  };
 
   if (!isLogin) {
     return <Redirect to="/login" />;
