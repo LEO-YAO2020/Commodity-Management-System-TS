@@ -6,6 +6,7 @@ import { Button, Popconfirm } from 'antd';
 import screenfull from 'screenfull';
 import { useAppSelector, useAppDispatch } from '../../../redux/reduxHooks';
 import { userInfo, deleteUserInfo } from '../../../redux/reducers/login_reducer';
+import { withRouter } from 'react-router';
 
 const HeaderStyle = styled.header`
   background: white;
@@ -53,7 +54,7 @@ const HeaderStyle = styled.header`
   }
 `;
 
-export default function Header() {
+function Header() {
   const [isFull, setIsFull] = useState(false);
   const [data, setDate] = useState(dayjs().format('YYYY-MM-DD HH:mm:ss'));
 
@@ -66,13 +67,14 @@ export default function Header() {
         setIsFull(!isFull);
       });
     }
-    let interval = setInterval(()=>{
-      setDate(dayjs().format('YYYY-MM-DD HH:mm:ss'))
-    },1000)
 
-    return ()=>{
-      clearInterval(interval)
-    }
+    let interval = setInterval(() => {
+      setDate(dayjs().format('YYYY-MM-DD HH:mm:ss'));
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, [isFull]);
 
   return (
@@ -105,10 +107,11 @@ export default function Header() {
       <div className="header-bottom">
         <div className="header-bottom-left">柱状图</div>
         <div className="header-bottom-right">
-        {data}
-          <img src="" alt="天气" />晴 温度:2-5
+          {data}
+          <img src="http://api.map.baidu.com/images/weather/day/qing.png" alt="天气" />晴 温度:2-5 ℃
         </div>
       </div>
     </HeaderStyle>
   );
 }
+export default withRouter(Header);
