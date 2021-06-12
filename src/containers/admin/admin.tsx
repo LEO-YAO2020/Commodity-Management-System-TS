@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Redirect, Route, RouteComponentProps, Switch } from 'react-router';
+import { Redirect, Route, Switch } from 'react-router';
 import { Layout } from 'antd';
 import styled from 'styled-components';
 import { reqCategoryList } from '../../api';
@@ -14,6 +14,7 @@ import Role from '../role/role';
 import Bar from '../bar/bar';
 import Line from '../line/line';
 import Pie from '../pie/pie';
+import LeftMenu from './left_nav/left_nav'
 
 const { Footer, Sider, Content } = Layout;
 
@@ -31,7 +32,7 @@ const LayoutStyle = styled(Layout)`
   }
 `;
 
-function Admin(props:RouteComponentProps) {
+function Admin() {
   const { isLogin } = useAppSelector(userInfo);
 
   useEffect(() => {
@@ -49,7 +50,9 @@ function Admin(props:RouteComponentProps) {
   } else {
     return (
       <LayoutStyle>
-        <Sider className="sider">Sider</Sider>
+        <Sider className="sider">
+          <LeftMenu/>
+        </Sider>
         <Layout>
           <Header />
           <Content className="content">

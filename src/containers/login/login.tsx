@@ -54,8 +54,7 @@ const Login = (props: RouteComponentProps) => {
     let result: LoginType = await reqLogin(values);
     const { status, msg, data } = result;
     if (status === 0) {
-      //store.setUserInfo(data)
-      console.log(data);
+
       localStorage.setItem('user',JSON.stringify(data.user))
       localStorage.setItem('token',data.token)
       localStorage.setItem('isLogin','true')

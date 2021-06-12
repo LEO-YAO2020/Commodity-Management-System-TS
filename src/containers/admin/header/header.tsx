@@ -6,7 +6,7 @@ import { Button, Popconfirm } from 'antd';
 import screenfull from 'screenfull';
 import { useAppSelector, useAppDispatch } from '../../../redux/reduxHooks';
 import { userInfo, deleteUserInfo } from '../../../redux/reducers/login_reducer';
-import { withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 const HeaderStyle = styled.header`
   background: white;
@@ -54,7 +54,7 @@ const HeaderStyle = styled.header`
   }
 `;
 
-function Header() {
+function Header(props:RouteComponentProps) {
   const [isFull, setIsFull] = useState(false);
   const [data, setDate] = useState(dayjs().format('YYYY-MM-DD HH:mm:ss'));
 
@@ -105,7 +105,7 @@ function Header() {
         </Popconfirm>
       </div>
       <div className="header-bottom">
-        <div className="header-bottom-left">柱状图</div>
+        <div className="header-bottom-left">{props.location.pathname}</div>
         <div className="header-bottom-right">
           {data}
           <img src="http://api.map.baidu.com/images/weather/day/qing.png" alt="天气" />晴 温度:2-5 ℃
