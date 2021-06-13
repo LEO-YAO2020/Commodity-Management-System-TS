@@ -3,6 +3,7 @@ import axios, { AxiosError } from 'axios';
 import { baseURL } from '../config';
 import Nprogress from 'nprogress';
 import 'nprogress/nprogress.css';
+import { IResponse } from '../lib/types/api';
 
 const axiosInstance = axios.create({
   withCredentials: true,
@@ -76,8 +77,8 @@ axiosInstance.interceptors.response.use(
     return new Promise(() => {});
   }
 );
-
-export async function apiGetResponse(url: string, param?: {}) {
+export default axiosInstance 
+export async function apiGetResponse(url: string, param?: {}):Promise<IResponse> {
   const aipResponse = await axiosInstance.get(creatUrl(url, param)).then((res) => res);
   return aipResponse;
 }

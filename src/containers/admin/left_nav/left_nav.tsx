@@ -1,9 +1,10 @@
 import React from 'react';
 import { Menu } from 'antd';
-
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { menuArr, menuInter } from '../../../config/menu_config';
+import { useAppDispatch } from '../../../redux/reduxHooks';
+import { saveTitle } from '../../../redux/reducers/menu_reducer';
 
 const HeaderStyle = styled.header`
   display: flex;
@@ -20,18 +21,24 @@ const HeaderStyle = styled.header`
   }
 `;
 const { SubMenu } = Menu;
-export default function Left_nav() {
+
+const Left_nav = (props: RouteComponentProps) => {
+  const dispatch = useAppDispatch();
   const createMenu = (target: menuInter[]): JSX.Element[] => {
     return target.map((item) => {
       if (!item.children) {
-        console.log(item);
         return (
-          <Menu.Item key={item.key} icon={item.icon}>
+          <Menu.Item
+            key={item.key}
+            icon={item.icon}
+            onClick={() => {
+              dispatch(saveTitle({ title: item.title }));
+            }}
+          >
             <Link to={item.path}>{item.title}</Link>
           </Menu.Item>
         );
       } else {
-        console.log(item);
         return (
           <SubMenu key={item.key} icon={item.icon} title={item.title}>
             {createMenu(item.children)}
@@ -47,23 +54,16 @@ export default function Left_nav() {
         <img src="/image/logo.png" alt="" />
         <h1>Commodity Management System</h1>
       </HeaderStyle>
-      <Menu defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode="inline" theme="dark">
+      <Menu
+        defaultSelectedKeys={[props.location.pathname.split('/').reverse()[0]]}
+        defaultOpenKeys={[props.location.pathname.split('/').reverse()[1]]}
+        mode="inline"
+        theme="dark"
+      >
         {createMenu(menuArr)}
       </Menu>
     </div>
   );
-}
-/* 
- <Menu.Item key="home" icon={<HomeOutlined />}>
-          <Link to="/admin/home">Home</Link>
-        </Menu.Item>
+};
 
-        <SubMenu key="prod_about" icon={<AppstoreOutlined />} title="Navigation One">
-          <Menu.Item key="category" icon={<UnorderedListOutlined />}>
-            <Link to="/admin/prod_about/category">Category management</Link>
-          </Menu.Item>
-          <Menu.Item key="product" icon={<ToolOutlined />}>
-            Product management
-          </Menu.Item>
-        </SubMenu>
-*/
+export default withRouter(Left_nav);

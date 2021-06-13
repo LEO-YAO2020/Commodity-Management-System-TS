@@ -6,7 +6,9 @@ import { Button, Popconfirm } from 'antd';
 import screenfull from 'screenfull';
 import { useAppSelector, useAppDispatch } from '../../../redux/reduxHooks';
 import { userInfo, deleteUserInfo } from '../../../redux/reducers/login_reducer';
+import { menuTitle } from '../../../redux/reducers/menu_reducer';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { menuArr } from '../../../config/menu_config';
 
 const HeaderStyle = styled.header`
   background: white;
@@ -54,10 +56,11 @@ const HeaderStyle = styled.header`
   }
 `;
 
-function Header(props:RouteComponentProps) {
+function Header(props: RouteComponentProps) {
   const [isFull, setIsFull] = useState(false);
+  const [initialTitle, setInitialTitle] = useState('');
   const [data, setDate] = useState(dayjs().format('YYYY-MM-DD HH:mm:ss'));
-
+  const title = useAppSelector(menuTitle);
   const { user } = useAppSelector(userInfo);
   const dispatch = useAppDispatch();
 
@@ -76,6 +79,28 @@ function Header(props:RouteComponentProps) {
       clearInterval(interval);
     };
   }, [isFull]);
+
+  useEffect(() => {
+    getTitle();
+  }, []);
+
+  const getTitle = () => {
+    let pathKey = props.location.pathname.split('/').reverse()[0];
+    let title = '';
+    menuArr.forEach((item) => {
+      if (item.children instanceof Array) {
+        let tmp = item.children.find((citem) => citem.key === pathKey);
+        if (tmp) {
+          title = tmp.title;
+        }
+      } else {
+        if (pathKey === item.key) {
+          title = item.title;
+        }
+      }
+    });
+    setInitialTitle(title);
+  };
 
   return (
     <HeaderStyle>
@@ -105,7 +130,7 @@ function Header(props:RouteComponentProps) {
         </Popconfirm>
       </div>
       <div className="header-bottom">
-        <div className="header-bottom-left">{props.location.pathname}</div>
+        <div className="header-bottom-left">{title || initialTitle}</div>
         <div className="header-bottom-right">
           {data}
           <img src="http://api.map.baidu.com/images/weather/day/qing.png" alt="天气" />晴 温度:2-5 ℃

@@ -12,7 +12,7 @@ const initialState: LoginResponse = {
   isLogin: user && token ? true : false,
 };
 
-export const testSlice = createSlice({
+export const loginSlice = createSlice({
   name: 'login',
   initialState,
   reducers: {
@@ -35,9 +35,9 @@ export const testSlice = createSlice({
   },
 });
 
-export const { saveUserInfo, deleteUserInfo } = testSlice.actions; //= connect(dispatch)
+export const { saveUserInfo, deleteUserInfo } = loginSlice.actions; //= connect(dispatch)
 
 export const userInfo = (state: RootState) => state.userInfo; // = connect(state)
 
 
-export default testSlice.reducer;
+export default loginSlice.reducer;
