@@ -58,6 +58,7 @@ export default function Category() {
 
   const showAdd = () => {
     setOpenType('Add Item');
+    setCurrentValue('')
     setIsModalVisible(true);
   };
   const showUpdate = (value: { _id: number; name: string }) => {
@@ -95,11 +96,11 @@ export default function Category() {
       }
       if (status === 1) message.error(msg, 1);
     }
-    form.resetFields();
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    form.resetFields();
   };
 
   return (
