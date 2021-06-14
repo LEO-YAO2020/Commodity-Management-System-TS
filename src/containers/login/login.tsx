@@ -5,7 +5,6 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useAppDispatch,useAppSelector } from '../../redux/reduxHooks';
 import { saveUserInfo,userInfo } from '../../redux/reducers/login_reducer';
 import { reqLogin } from '../../api/index';
-import { LoginType } from '../../lib/types/login';
 import { Redirect, RouteComponentProps } from 'react-router';
 const LoginStyle = styled.div`
   width: 100%;
@@ -51,7 +50,7 @@ const Login = (props: RouteComponentProps) => {
   const {isLogin} = useAppSelector(userInfo)
   const onFinish = async (values: { username: string; password: string }) => {
 
-    let result: LoginType = await reqLogin(values);
+    let result = await reqLogin(values);
     const { status, msg, data } = result;
     if (status === 0) {
 

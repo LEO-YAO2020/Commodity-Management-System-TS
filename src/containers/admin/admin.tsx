@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import { Layout } from 'antd';
 import styled from 'styled-components';
-import { reqCategoryList } from '../../api';
 import {  useAppSelector } from '../../redux/reduxHooks';
 import { userInfo } from '../../redux/reducers/login_reducer';
 import Header from './header/header';
@@ -35,14 +34,6 @@ const LayoutStyle = styled(Layout)`
 function Admin() {
   const { isLogin } = useAppSelector(userInfo);
 
-  useEffect(() => {
-    reqCategoryList().then(
-      res=>{
-        console.log(res);
-      }
-    )
-    
-  }, []);
 
 
   if (!isLogin) {

@@ -3,7 +3,6 @@ import axios, { AxiosError } from 'axios';
 import { baseURL } from '../config';
 import Nprogress from 'nprogress';
 import 'nprogress/nprogress.css';
-import { IResponse } from '../lib/types/api';
 
 const axiosInstance = axios.create({
   withCredentials: true,
@@ -77,34 +76,5 @@ axiosInstance.interceptors.response.use(
     return new Promise(() => {});
   }
 );
-export default axiosInstance 
-export async function apiGetResponse(url: string, param?: {}):Promise<IResponse> {
-  const aipResponse = await axiosInstance.get(creatUrl(url, param)).then((res) => res);
-  return aipResponse;
-}
-export async function apiPostResponse(url: string, param: {}) {
-  const aipResponse = await axiosInstance.post(creatUrl(url), param).then((res) => res);
-  return aipResponse;
-}
+export default axiosInstance;
 
-export async function apiPutResponse(url: string, param: {}) {
-  const aipResponse = await axiosInstance.put(creatUrl(url), param).then((res) => res);
-  return aipResponse;
-}
-
-export async function apiDeleteResponse(url: string, param: {}) {
-  const aipResponse = await axiosInstance.delete(creatUrl(url), param).then((res) => res);
-  return aipResponse;
-}
-
-const creatUrl = (path: string | [], params?: {}): string => {
-  const paths = typeof path === 'string' ? path : path.join('/');
-  let name = '';
-  if (params) {
-    name = Object.entries(params)
-      .map(([key, value]) => `${key}=${value}`)
-      .join('&');
-    return `${paths}?${name}`;
-  }
-  return `${paths}`;
-};
