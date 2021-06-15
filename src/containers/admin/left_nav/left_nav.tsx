@@ -55,7 +55,7 @@ const Left_nav = (props: RouteComponentProps) => {
         <h1>Commodity Management System</h1>
       </HeaderStyle>
       <Menu
-        defaultSelectedKeys={[props.location.pathname.split('/').reverse()[0]]}
+        selectedKeys={[props.location.pathname.split('/').reverse()[0]]}
         defaultOpenKeys={[props.location.pathname.split('/').reverse()[1]]}
         mode="inline"
         theme="dark"
