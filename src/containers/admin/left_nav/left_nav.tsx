@@ -49,13 +49,17 @@ const Left_nav = (props: RouteComponentProps) => {
   };
 
   return (
-    <div>
+    <div style={{ height: '100%vh'}}>
       <HeaderStyle>
         <img src="/image/logo.png" alt="" />
         <h1>Commodity Management System</h1>
       </HeaderStyle>
       <Menu
-        selectedKeys={[props.location.pathname.split('/').reverse()[0]]}
+        selectedKeys={[
+          props.location.pathname.includes('product')
+            ? 'product'
+            : props.location.pathname.split('/').reverse()[1],
+        ]}
         defaultOpenKeys={[props.location.pathname.split('/').reverse()[1]]}
         mode="inline"
         theme="dark"

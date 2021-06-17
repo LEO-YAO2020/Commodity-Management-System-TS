@@ -3,9 +3,12 @@ import React, { BaseSyntheticEvent, useEffect, useState } from 'react';
 import { Card, Button, Input, Select, Table, message } from 'antd';
 import { PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { reqProductList, reqSearchProduct, reqUpdateProdStatus } from '../../api';
+import { RouteComponentProps } from 'react-router';
+import { useAppDispatch } from '../../redux/reduxHooks';
+import { saveProList } from '../../redux/reducers/product_reducer ';
 
 const { Option } = Select;
-export default function Role() {
+export default function Role(props: RouteComponentProps) {
   const [pageNum, setPageNum] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [dataSource, setDataSource] = useState<any[]>([]);
@@ -13,7 +16,7 @@ export default function Role() {
   const [keyWord, setKeyWord] = useState('');
   const [isSearch, setIsSearch] = useState(false);
   const [searchType, setSearchType] = useState('productName');
-
+  const dispatch = useAppDispatch();
   const columns = [
     {
       title: 'Name',
@@ -56,7 +59,7 @@ export default function Role() {
                   status: record.status,
                 });
                 if (result.status === 0) {
-                  message.success('更新商品状态成功');
+                  message.success('Success');
                   productList = productList.map((item) => {
                     if (item._id === record._id) {
                       item.status = record.status;
@@ -64,7 +67,7 @@ export default function Role() {
                     return item;
                   });
                   setDataSource(productList);
-                } else message.error('更新商品状态失败');
+                } else message.error('update failed');
               }}
             >
               {record.status === 1 ? 'Remove' : 'Add'}
@@ -79,11 +82,25 @@ export default function Role() {
       dataIndex: 'opera',
       key: 'Operate',
       width: '10%',
-      render: () => {
+      render: (_value: string, record: { _id: Number }) => {
         return (
           <div>
-            <Button type="link">details</Button>
-            <Button type="link">edit</Button>
+            <Button
+              type="link"
+              onClick={() => {
+                props.history.push(`/admin/prod_about/product/detail/${record._id}`);
+              }}
+            >
+              details
+            </Button>
+            <Button
+              type="link"
+              onClick={() => {
+                props.history.push('/admin/prod_about/product/add_update/12354');
+              }}
+            >
+              edit
+            </Button>
           </div>
         );
       },
@@ -98,6 +115,7 @@ export default function Role() {
           setDataSource(data.list);
           setTotal(data.total);
           setPageNum(res.data.pageNum);
+          dispatch(saveProList({ data: data.list }));
         } else {
           message.error(msg, 1);
         }
@@ -151,7 +169,13 @@ export default function Role() {
           </>
         }
         extra={
-          <Button type="primary" icon={<PlusCircleOutlined />}>
+          <Button
+            type="primary"
+            icon={<PlusCircleOutlined />}
+            onClick={() => {
+              props.history.push('/admin/prod_about/product/add_update');
+            }}
+          >
             More
           </Button>
         }

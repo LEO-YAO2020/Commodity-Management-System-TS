@@ -1,11 +1,13 @@
 import { configureStore,ThunkAction,Action } from '@reduxjs/toolkit'
 import loginReducer from './reducers/login_reducer'
 import menuReducer from './reducers/menu_reducer'
+import productReducer from './reducers/product_reducer '
 
 export const store  = configureStore({  // = connect()+combineReducers()
   reducer:{
     userInfo: loginReducer,
-    menuTitle: menuReducer
+    menuTitle: menuReducer,
+    proList:productReducer
   }
 })
 

@@ -26,3 +26,24 @@ export interface ProductSearchInter {
   searchType: string;
   keyWord: string;
 }
+
+export interface ProductListItems {
+  _id:Number
+  categoryId:string,
+  desc:string,
+  detail:string,
+  imgs:[],
+  name:string,
+  price:string,
+}
+
+export interface ProductDetailInfo {
+  categoryId: string
+  desc: string
+  detail: string
+  imgs: []
+  name: string
+  price: string
+  status: number
+  _id: string
+}

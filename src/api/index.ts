@@ -3,6 +3,7 @@ import { CategoryAddInter, CategoryUpdateInter } from '../lib/types/category';
 import { IResponse } from '../lib/types/api';
 import { LoginResponse } from '../lib/types/login';
 import {
+  ProductDetailInfo,
   ProductListInter,
   ProductListResInter,
   ProductSearchInter,
@@ -64,6 +65,15 @@ export const reqSearchProduct = (
 ): Promise<IResponse<ProductListResInter>> => {
   const { pageNum, pageSize, searchType, keyWord } = params;
   const url = creatUrl('/manage/product/search', { pageNum, pageSize, [searchType]: keyWord });
+  const res = AXios.get(url);
+  return res;
+};
+
+export const reqProdById = (params: {
+  productId: string;
+}): Promise<IResponse<ProductDetailInfo>> => {
+  const { productId } = params;
+  const url = creatUrl('/manage/product/info', { productId });
   const res = AXios.get(url);
   return res;
 };

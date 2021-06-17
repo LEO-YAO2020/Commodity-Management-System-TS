@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import { Layout } from 'antd';
 import styled from 'styled-components';
-import {  useAppSelector } from '../../redux/reduxHooks';
+import { useAppSelector } from '../../redux/reduxHooks';
 import { userInfo } from '../../redux/reducers/login_reducer';
 import Header from './header/header';
 import Home from '../../components/home/home';
@@ -13,12 +13,14 @@ import Role from '../role/role';
 import Bar from '../bar/bar';
 import Line from '../line/line';
 import Pie from '../pie/pie';
-import LeftMenu from './left_nav/left_nav'
+import LeftMenu from './left_nav/left_nav';
+import Detail from '../product/detail';
+import Update from '../product/add_update';
 
 const { Footer, Sider, Content } = Layout;
 
 const LayoutStyle = styled(Layout)`
-  height: 100%;
+  min-height: 100vh;
   .sider {
     color: white;
   }
@@ -34,29 +36,31 @@ const LayoutStyle = styled(Layout)`
 function Admin() {
   const { isLogin } = useAppSelector(userInfo);
 
-
-
   if (!isLogin) {
     return <Redirect to="/login" />;
   } else {
     return (
       <LayoutStyle>
         <Sider className="sider">
-          <LeftMenu/>
+          <LeftMenu />
         </Sider>
         <Layout>
           <Header />
           <Content className="content">
             <Switch>
-              <Route path="/admin/home" component={Home}/>
-              <Route path="/admin/prod_about/category" component={Category}/>
-              <Route path="/admin/prod_about/product" component={Product}/>
-              <Route path="/admin/user" component={User}/>
-              <Route path="/admin/role" component={Role}/>
-              <Route path="/admin/charts/bar" component={Bar}/>
-              <Route path="/admin/charts/line" component={Line}/>
-              <Route path="/admin/charts/pie" component={Pie}/>
-              <Redirect to="/admin/home"/>
+              <Route path="/admin/home" component={Home} />
+              <Route path="/admin/prod_about/category" component={Category} />
+              <Route path="/admin/prod_about/product" component={Product} exact />
+              <Route path="/admin/prod_about/product/detail" exact component={Detail} />
+              <Route path="/admin/prod_about/product/detail/:id" component={Detail} />
+              <Route path="/admin/prod_about/product/add_update" exact component={Update} />
+              <Route path="/admin/prod_about/product/add_update/:id" component={Detail} />
+              <Route path="/admin/user" component={User} />
+              <Route path="/admin/role" component={Role} />
+              <Route path="/admin/charts/bar" component={Bar} />
+              <Route path="/admin/charts/line" component={Line} />
+              <Route path="/admin/charts/pie" component={Pie} />
+              <Redirect to="/admin/home" />
             </Switch>
           </Content>
           <Footer className="footer">Created by LeoYao @2021</Footer>

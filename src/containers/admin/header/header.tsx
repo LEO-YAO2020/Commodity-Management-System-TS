@@ -86,6 +86,9 @@ function Header(props: RouteComponentProps) {
 
   const getTitle = () => {
     let pathKey = props.location.pathname.split('/').reverse()[0];
+    if (props.location.pathname.includes('add_update') || props.location.pathname.includes('detail') ) {
+      pathKey = 'product'
+    }
     let title = '';
     menuArr.forEach((item) => {
       if (item.children instanceof Array) {
