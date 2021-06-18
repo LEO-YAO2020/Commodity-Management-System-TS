@@ -5,8 +5,10 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { useAppSelector } from '../../redux/reduxHooks';
 import { proList } from '../../redux/reducers/product_reducer ';
+import { categoryList } from '../../redux/reducers/category_reducer';
 import { ProductListItems } from '../../lib/types/product';
-import { reqProdById } from '../../api';
+import { reqCategoryList, reqProdById } from '../../api';
+import { CategoryItems } from '../../lib/types/category';
 
 const { Item } = List;
 interface MatchParams {
@@ -20,34 +22,70 @@ const Span = styled.span`
 `;
 export default function Detail(props: Props) {
   const productList: Array<ProductListItems> = useAppSelector(proList);
-
+  const categoryItem: Array<CategoryItems> = useAppSelector(categoryList);
   const [productDetail, setProductDetail] = useState([
     { categoryId: '', desc: '', detail: '', imgs: [], name: '', price: '' },
   ]);
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(true);
 
+  const getCategoryList = async (categoryId: string) => {
+    const result = await reqCategoryList();
+    const { status, data, msg } = result;
+    console.log(categoryId);
+    if (status === 0) {
+      let result = data.find((item) => item._id === categoryId);
+      if (result) {
+
+        setName(result.name);
+        setLoading(false);
+      }
+    } else message.error(msg, 1);
+  };
   useEffect(() => {
-    let result = productList.find((item) => {
-      return item._id.toString() === props.match.params.id;
-    });
-    if (productList.length === 0) {
+    let categoryIdinfo = '';
+    if (productList.length) {
+      let result = productList.find((item) => {
+        return item._id.toString() === props.match.params.id;
+      });
+      if (result) {
+        categoryIdinfo = result.categoryId;
+        setProductDetail([{ ...result }]);
+      }
+    } else {
       reqProdById({ productId: props.match.params.id }).then((res) => {
         const { data, status, msg } = res;
         if (status === 0) {
-          const { categoryId, desc, detail, imgs, name, price } = data;
-          setProductDetail([{ categoryId, desc, detail, imgs, name, price }]);
+          categoryIdinfo = data.categoryId;
+          setProductDetail([{ ...data }]);
+          console.log(categoryIdinfo);
         } else {
           message.error(msg, 1);
         }
       });
+
     }
-    if (result) {
-      const { categoryId, desc, detail, imgs, name, price } = result;
-      setProductDetail([{ categoryId, desc, detail, imgs, name, price }]);
+
+    if (categoryItem.length) {
+      let result = categoryItem.find((item) => {
+        return item._id === categoryIdinfo;
+      });
+
+      if (result) {
+        setName(result.name);
+        setLoading(false);
+      }
+    } else {
+
+      getCategoryList(categoryIdinfo);
+      setLoading(false);
     }
   }, []);
+
   return (
     <div>
       <Card
+        loading={loading}
         size="small"
         title={
           <>
@@ -64,7 +102,7 @@ export default function Detail(props: Props) {
         }
       >
         <List
-        style={{maxHeight:'100%'}}
+          style={{ maxHeight: '100%' }}
           bordered
           dataSource={productDetail}
           renderItem={(item) => (
@@ -84,8 +122,8 @@ export default function Detail(props: Props) {
                 </Span>
               </Item>
               <Item>
-                <Span>Product categoryId: </Span>
-                {item.categoryId}
+                <Span>Category Name: </Span>
+                {name}
               </Item>
               <Item>
                 <Span>

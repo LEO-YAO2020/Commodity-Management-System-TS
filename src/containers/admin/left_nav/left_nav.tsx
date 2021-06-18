@@ -58,9 +58,9 @@ const Left_nav = (props: RouteComponentProps) => {
         selectedKeys={[
           props.location.pathname.includes('product')
             ? 'product'
-            : props.location.pathname.split('/').reverse()[1],
+            : props.location.pathname.split('/').reverse()[0],
         ]}
-        defaultOpenKeys={[props.location.pathname.split('/').reverse()[1]]}
+        defaultOpenKeys={[props.location.pathname.split('/').reverse()[0]]}
         mode="inline"
         theme="dark"
       >

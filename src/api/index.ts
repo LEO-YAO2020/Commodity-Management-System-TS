@@ -1,5 +1,5 @@
 import AXios from './myAxios';
-import { CategoryAddInter, CategoryUpdateInter } from '../lib/types/category';
+import { CategoryAddInter, CategoryItems, CategoryUpdateInter } from '../lib/types/category';
 import { IResponse } from '../lib/types/api';
 import { LoginResponse } from '../lib/types/login';
 import {
@@ -10,6 +10,7 @@ import {
   ProductStatusInter,
   ProductStatusResInter,
 } from '../lib/types/product';
+import { UploadDelete } from '../lib/types/upload';
 
 const creatUrl = (path: string | [], params?: {}): string => {
   const paths = typeof path === 'string' ? path : path.join('/');
@@ -30,7 +31,7 @@ export const reqLogin = (query: {
   return res;
 };
 
-export const reqCategoryList = (): Promise<IResponse<[]>> => {
+export const reqCategoryList = (): Promise<IResponse<Array<CategoryItems>>> => {
   const res = AXios.get('/manage/category/list');
   return res;
 };
@@ -77,3 +78,16 @@ export const reqProdById = (params: {
   const res = AXios.get(url);
   return res;
 };
+
+export const reqDeletePicture = (params: UploadDelete): Promise<IResponse<string>> => {
+  const res = AXios.post('/manage/img/delete', params);
+  return res;
+};
+
+export const reqAddProduct = (params: ProductDetailInfo): Promise<IResponse<string>> => {
+  const res = AXios.post('/manage/product/add', params);
+  return res;
+};
+
+
+

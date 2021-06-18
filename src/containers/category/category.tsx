@@ -3,9 +3,12 @@ import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Card, message, Table, Modal, Form, Input } from 'antd';
 import { reqAddCategory, reqCategoryList, reqUpdateCategory } from '../../api';
 import { PAGESIZE } from '../../config';
+import { saveCategoryList } from '../../redux/reducers/category_reducer';
+import { useAppDispatch } from '../../redux/reduxHooks';
 
 export default function Category() {
   const [form] = Form.useForm();
+  const dispatch = useAppDispatch();
   const [productList, setProductList] = useState<object[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -20,6 +23,7 @@ export default function Category() {
     if (status === 0) {
       setProductList(data.reverse());
       setLoading(false);
+      dispatch(saveCategoryList({ data }));
     } else message.error(msg, 1);
   };
 
@@ -58,7 +62,7 @@ export default function Category() {
 
   const showAdd = () => {
     setOpenType('Add Item');
-    setCurrentValue('')
+    setCurrentValue('');
     setIsModalVisible(true);
   };
   const showUpdate = (value: { _id: number; name: string }) => {
