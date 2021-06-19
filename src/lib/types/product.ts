@@ -28,7 +28,7 @@ export interface ProductSearchInter {
 }
 
 export interface ProductListItems {
-  _id:Number
+  _id?:Number
   categoryId:string,
   desc:string,
   detail:string,

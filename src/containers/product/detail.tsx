@@ -32,7 +32,7 @@ export default function Detail(props: Props) {
   const getCategoryList = async (categoryId: string) => {
     const result = await reqCategoryList();
     const { status, data, msg } = result;
-    console.log(categoryId);
+
     if (status === 0) {
       let result = data.find((item) => item._id === categoryId);
       if (result) {
@@ -46,7 +46,7 @@ export default function Detail(props: Props) {
     let categoryIdinfo = '';
     if (productList.length) {
       let result = productList.find((item) => {
-        return item._id.toString() === props.match.params.id;
+        return item._id?.toString() === props.match.params.id;
       });
       if (result) {
         categoryIdinfo = result.categoryId;
@@ -129,7 +129,7 @@ export default function Detail(props: Props) {
                 <Span>
                   Product images：{' '}
                   {item.imgs.map((item, index) => {
-                    return <img src={`/upload/` + item} alt="商品图片" key={index} />;
+                    return <img src={`/upload/` + item} alt="商品图片" key={index} style={{width:200}}/>;
                   })}
                 </Span>
               </Item>

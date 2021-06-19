@@ -1,11 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ProductListItems } from '../../lib/types/product';
 import { RootState } from '../store';
 
 
-
-const initialState = {
-  data:[]
+interface initialStateInter {
+  data: ProductListItems[];
+}
+const initialState: initialStateInter = {
+  data: [],
 };
+
 
 export const productSlice = createSlice({
   name: 'login',

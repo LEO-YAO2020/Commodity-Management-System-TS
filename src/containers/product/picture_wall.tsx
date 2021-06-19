@@ -2,8 +2,9 @@ import React from 'react';
 import { Upload, Modal, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { reqDeletePicture } from '../../api';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { UploadContent } from '../../lib/types/upload';
+import { baseURL } from '../../config';
 
 function getBase64(file: any) {
   return new Promise((resolve, reject) => {
@@ -18,7 +19,7 @@ interface Istate {
   previewVisible: boolean;
   previewImage: string;
   previewTitle: string;
-  fileList: any;
+  fileList: UploadContent[];
 }
 
 class PicturesWall extends React.Component {
@@ -45,10 +46,19 @@ class PicturesWall extends React.Component {
 
   getImgArr = () => {
     let result: string[] = [];
-    this.state.fileList.forEach((element: { name: string }) => {
+    this.state.fileList.forEach((element) => {
       result.push(element.name);
     });
     return result;
+  };
+
+  setFileList = (imgArr: []) => {
+    let fileList: UploadContent[] = [];
+    console.log(imgArr);
+    imgArr.forEach((element, index) => {
+      fileList.push({ uid: -index + '', name: element, url: `${baseURL}/UPLOAD/${element}` });
+    });
+    this.setState({ fileList });
   };
 
   render() {

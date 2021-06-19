@@ -96,7 +96,7 @@ export default function Role(props: RouteComponentProps) {
             <Button
               type="link"
               onClick={() => {
-                props.history.push('/admin/prod_about/product/add_update/12354');
+                props.history.push(`/admin/prod_about/product/add_update/${record._id}`);
               }}
             >
               edit

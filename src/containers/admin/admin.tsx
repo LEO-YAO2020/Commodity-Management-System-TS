@@ -54,7 +54,7 @@ function Admin() {
               <Route path="/admin/prod_about/product/detail" exact component={Detail} />
               <Route path="/admin/prod_about/product/detail/:id" component={Detail} />
               <Route path="/admin/prod_about/product/add_update" exact component={Update} />
-              <Route path="/admin/prod_about/product/add_update/:id" component={Detail} />
+              <Route path="/admin/prod_about/product/add_update/:id" component={Update} />
               <Route path="/admin/user" component={User} />
               <Route path="/admin/role" component={Role} />
               <Route path="/admin/charts/bar" component={Bar} />

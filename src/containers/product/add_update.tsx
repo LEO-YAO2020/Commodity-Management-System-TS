@@ -6,23 +6,51 @@ import { useAppSelector } from '../../redux/reduxHooks';
 import { categoryList } from '../../redux/reducers/category_reducer';
 import { CategoryItems } from '../../lib/types/category';
 import { proList } from '../../redux/reducers/product_reducer ';
-import { reqAddProduct, reqCategoryList } from '../../api';
+import { reqAddProduct, reqCategoryList, reqProdById, reqUpdateProduct } from '../../api';
 import PictureWall from './picture_wall';
 import TextEditor from './rich_text_editor';
-import { ProductDetailInfo } from '../../lib/types/product';
+
 const { Item } = Form;
 interface MatchParams {
   id: string;
 }
 interface Props extends RouteComponentProps<MatchParams> {}
 export default function Update(props: Props) {
+  const [form] = Form.useForm();
   const pictureRef = useRef<PictureWall>(null);
   const textRef = useRef<TextEditor>(null);
   const [productInfo, setProductInfo] = useState<CategoryItems[]>([]);
+  const [operateType, setOperateType] = useState('add');
   const category = useAppSelector(categoryList);
   const product = useAppSelector(proList);
 
+  const getProductList = async (id: string) => {
+    let result = await reqProdById({ productId: id });
+    const { status, data } = result;
+    if (status === 0) {
+      form.setFieldsValue({ ...data });
+      pictureRef.current?.setFileList(data.imgs);
+      textRef.current?.setRichText(data.detail);
+    }
+  };
+
   useEffect(() => {
+    const { id } = props.match.params;
+    if (id) {
+      setOperateType('update');
+      if (product.length) {
+        let result = product.find((item) => item?._id?.toString() === id);
+
+        if (result) {
+          form.setFieldsValue({ ...result });
+          pictureRef.current?.setFileList(result.imgs);
+          textRef.current?.setRichText(result.detail);
+        }
+      } else {
+        getProductList(id);
+      }
+    }
+
     if (category.length) {
       setProductInfo(category);
     } else {
@@ -40,12 +68,18 @@ export default function Update(props: Props) {
   const handleSubmit = async (value: any) => {
     let imgs = pictureRef.current?.getImgArr();
     let detail = textRef.current?.getHtmlText();
-
-    const res = await reqAddProduct({ ...value, imgs, detail });
+    const { id } = props.match.params;
+    let res;
+    if (operateType === 'add') {
+      res = await reqAddProduct({ ...value, imgs, detail });
+    } else {
+      res = await reqUpdateProduct({ ...value, imgs, detail, _id: id });
+    }
     const { status, msg } = res;
     if (status === 0) {
-      message.success('success')
-      props.history.replace('/admin/prod_about/product')
+      message.success('success');
+      props.history.replace('/admin/prod_about/product');
+      form.resetFields();
     } else {
       message.error(msg, 1);
     }
@@ -68,8 +102,8 @@ export default function Update(props: Props) {
         offset: 0,
       },
       sm: {
-        span: 16,
-        offset: 8,
+        span: 18,
+        offset: 6,
       },
     },
   };
@@ -88,24 +122,19 @@ export default function Update(props: Props) {
             >
               <ArrowLeftOutlined />
             </Button>
-            <span>Product Detail</span>
+            <span>Product {operateType}</span>
           </>
         }
       >
-        <Form onFinish={handleSubmit} {...formItemLayout}>
+        <Form onFinish={handleSubmit} {...formItemLayout} form={form}>
           <Item label="Product Name">
-            <Item
-              initialValue=""
-              name="name"
-              rules={[{ required: true, message: 'Please Input Product Name' }]}
-            >
+            <Item name="name" rules={[{ required: true, message: 'Please Input Product Name' }]}>
               <Input placeholder="Product Name" />
             </Item>
           </Item>
           <Item
             label="Product Description"
             name="desc"
-            initialValue=""
             rules={[{ required: true, message: 'Please Input Product Description' }]}
           >
             <Input placeholder="商品描述" />
@@ -113,7 +142,6 @@ export default function Update(props: Props) {
           <Item
             label="Product Price"
             name="price"
-            initialValue=""
             rules={[{ required: true, message: 'Please Input Product Price' }]}
           >
             <Input placeholder="商品价格" addonAfter="元" prefix="￥" type="number" />
@@ -121,7 +149,6 @@ export default function Update(props: Props) {
           <Item
             label="Product Class"
             name="categoryId"
-            initialValue=""
             rules={[{ required: true, message: 'Please Input Product Class' }]}
           >
             <Select>
@@ -138,12 +165,12 @@ export default function Update(props: Props) {
           <Item label="Product Picture">
             <PictureWall ref={pictureRef} />
           </Item>
-          <Item label="商品详情" wrapperCol={{ md: 16 }}>
+          <Item label="商品详情" wrapperCol={{ md: 12 }}>
             <TextEditor ref={textRef} />
           </Item>
           <Item {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit">
-              提交
+              Submit
             </Button>
           </Item>
         </Form>

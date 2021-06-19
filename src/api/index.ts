@@ -11,6 +11,7 @@ import {
   ProductStatusResInter,
 } from '../lib/types/product';
 import { UploadDelete } from '../lib/types/upload';
+import { RoleResType, UserReqInter, UserResType } from '../lib/types/user';
 
 const creatUrl = (path: string | [], params?: {}): string => {
   const paths = typeof path === 'string' ? path : path.join('/');
@@ -89,5 +90,29 @@ export const reqAddProduct = (params: ProductDetailInfo): Promise<IResponse<stri
   return res;
 };
 
+export const reqUpdateProduct = (params: ProductDetailInfo): Promise<IResponse<string>> => {
+  const res = AXios.post('/manage/product/update', params);
+  return res;
+};
 
+export const reqRoleList = (): Promise<IResponse<[]>> => {
+  const url = creatUrl('/manage/role/list');
+  const res = AXios.get(url);
+  return res;
+};
 
+export const reqAddRole = (params: { roleName: string }): Promise<IResponse<[]>> => {
+  const res = AXios.post('/manage/role/add', params);
+  return res;
+};
+
+export const reqUserList = (): Promise<IResponse<{ users: UserResType[]; roles: RoleResType[] }>> => {
+  const url = creatUrl('/manage/user/list');
+  const res = AXios.get(url);
+  return res;
+};
+
+export const reqAddUser = (params: UserReqInter): Promise<IResponse<UserResType>> => {
+  const res = AXios.post('/manage/user/add', params);
+  return res;
+};
